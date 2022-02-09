@@ -75,7 +75,7 @@ export default function Dashboard() {
         <SideBard />
         {/* Grids from chakra that is simple */}
         <SimpleGrid flex="1" gap="4" minChildWidth="320px" align="flex-start">
-          <Box p="8" bg="gray.800" borderRadius={8} pb="4">
+          <Box p={["4", "8"]} bg="gray.800" borderRadius={8} pb="4">
             <Text fontSize="large" mb="4">
               Weekly Subscribers
             </Text>
@@ -83,7 +83,7 @@ export default function Dashboard() {
             <Chart options={options} series={series} type="area" height={160} />
           </Box>
 
-          <Box p="8" bg="gray.800" borderRadius={8} pb="4">
+          <Box p={["4", "8"]} bg="gray.800" borderRadius={8} pb="4">
             <Text fontSize="large" mb="4">
               Opening Rate
             </Text>
