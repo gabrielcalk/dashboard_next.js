@@ -1,7 +1,7 @@
 // mirage configuration
 import { createServer, Factory, Model } from "miragejs";
 // lib that create fake data
-import faker from 'faker';
+import faker from "faker";
 
 type User = {
   name: string;
@@ -20,25 +20,25 @@ export function makeServer() {
 
     // generate a lot of data to seed
     factories: {
-        user: Factory.extend({
-            // Using the I parametor to generate different users
-            name(i: number){
-                return `User ${1 + i}`
-            },
-            email(){
-                // generating random email
-                return faker.internet.email().toLowerCase();
-            },
-            createdAt(){
-                return faker.date.recent(10)
-            }
-        })
+      user: Factory.extend({
+        // Using the I parametor to generate different users
+        name(i: number) {
+          return `User ${1 + i}`;
+        },
+        email() {
+          // generating random email
+          return faker.internet.email().toLowerCase();
+        },
+        createdAt() {
+          return faker.date.recent(10);
+        },
+      }),
     },
 
     // creating data when the mirage server is initialized
-    seeds(server){
-        // create a list of 200 user using factories
-        server.createList('user', 200)
+    seeds(server) {
+      // create a list of 200 user using factories
+      server.createList("user", 10);
     },
 
     routes() {
@@ -52,7 +52,7 @@ export function makeServer() {
 
       // changed the namespace to a empty string to not conflit the api router existing on next.js pages
       this.namespace = "";
-      this.passthrough() //all th request sent to api pass through the mirage and if don't exist the request will pass to the next api route
+      this.passthrough(); //all th request sent to api pass through the mirage and if don't exist the request will pass to the next api route
     },
   });
 

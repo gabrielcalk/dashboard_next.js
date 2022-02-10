@@ -29,7 +29,15 @@ export default function UserList() {
     //key utilized to cache the data
     const response = await fetch("http://localhost:3000/api/users");
     const data = await response.json();
-    return data;
+    const users = data.users.map(user => {
+      return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        createdAt: new Date(user.createdAt).toLocaleDateString()
+      }
+    });
+    return users;
   });
 
   const isWideVersion = useBreakpointValue({
@@ -91,67 +99,41 @@ export default function UserList() {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {/* row 1 */}
-                  <Tr>
-                    <Td px={["4", "4", "6"]}>
-                      <Checkbox colorScheme="pink" />
-                    </Td>
-                    <Td px={["4", "4", "6"]}>
-                      <Box>
-                        <Text fontWeight="bold">Gabriel Cavalcante</Text>
-                        <Text fontSize="sm" color="gray.300">
-                          gabrielcalk@outlook.com
-                        </Text>
-                      </Box>
-                    </Td>
+                  {/* rows */}
+                  {data.map((user) => {
+                    return (
+                      <Tr key={user.id}>
+                        <Td px={["4", "4", "6"]}>
+                          <Checkbox colorScheme="pink" />
+                        </Td>
+                        <Td px={["4", "4", "6"]}>
+                          <Box>
+                            <Text fontWeight="bold">{user.name}</Text>
+                            <Text fontSize="sm" color="gray.300">
+                              {user.email}
+                            </Text>
+                          </Box>
+                        </Td>
 
-                    {isWideVersion && (
-                      <Td px={["4", "4", "6"]}>04 de Abril, 2021</Td>
-                    )}
-                    <Td>
-                      <Button
-                        as="a"
-                        size="sm"
-                        fontSize="sm"
-                        pr={["-1", "-1", "-1", "3"]}
-                        colorScheme="whiteAlpha"
-                        leftIcon={<Icon as={RiPencilLine} fontSize="16" />}
-                      >
-                        {isWideVersion && "Edit"}
-                      </Button>
-                    </Td>
-                  </Tr>
+                        {isWideVersion && (
+                          <Td px={["4", "4", "6"]}>{user.createdAt}</Td>
+                        )}
 
-                  {/* row 2 */}
-                  <Tr>
-                    <Td px={["4", "4", "6"]}>
-                      <Checkbox colorScheme="pink" />
-                    </Td>
-                    <Td px={["4", "4", "6"]}>
-                      <Box>
-                        <Text fontWeight="bold">Gabriel Cavalcante</Text>
-                        <Text fontSize="sm" color="gray.300">
-                          gabrielcalk@outlook.com
-                        </Text>
-                      </Box>
-                    </Td>
-
-                    {isWideVersion && (
-                      <Td px={["4", "4", "6"]}>04 de Abril, 2021</Td>
-                    )}
-                    <Td>
-                      <Button
-                        as="a"
-                        size="sm"
-                        fontSize="sm"
-                        pr={["-1", "-1", "-1", "3"]}
-                        colorScheme="whiteAlpha"
-                        leftIcon={<Icon as={RiPencilLine} fontSize="16" />}
-                      >
-                        {isWideVersion && "Edit"}
-                      </Button>
-                    </Td>
-                  </Tr>
+                        <Td>
+                          <Button
+                            as="a"
+                            size="sm"
+                            fontSize="sm"
+                            pr={["-1", "-1", "-1", "3"]}
+                            colorScheme="whiteAlpha"
+                            leftIcon={<Icon as={RiPencilLine} fontSize="16" />}
+                          >
+                            {isWideVersion && "Edit"}
+                          </Button>
+                        </Td>
+                      </Tr>
+                    );
+                  })}
                 </Tbody>
               </Table>
               <Pagination />
