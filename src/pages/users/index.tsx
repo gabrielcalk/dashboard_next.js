@@ -13,26 +13,30 @@ import {
   Td,
   Text,
   useBreakpointValue,
+  Spinner,
 } from "@chakra-ui/react";
 import Link from "next/link";
 import { useEffect } from "react";
 import { RiAddLine, RiPencilLine } from "react-icons/ri";
+import { useQuery } from "react-query"; //this useQuery will be used to make the request to the back-end/api
+
 import { Header } from "../../components/Header";
 import { Pagination } from "../../components/Paginations";
 import { SideBard } from "../../components/Sidebar";
 
 export default function UserList() {
+  const { data, isLoading, error } = useQuery("users", async () => {
+    //key utilized to cache the data
+    const response = await fetch("http://localhost:3000/api/users");
+    const data = await response.json();
+    return data;
+  });
+
   const isWideVersion = useBreakpointValue({
     // by default we are not on the wide version, but if the screen width is large, then the wide version is true
     base: false,
     lg: true,
   });
-
-  useEffect(() => {
-    fetch("http://localhost:3000/api/users")
-      .then((response) => response.json())
-      .then((data) => console.log(data));
-  }, []);
 
   return (
     <Box>
@@ -60,87 +64,99 @@ export default function UserList() {
             </Link>
           </Flex>
 
-          <Table colorScheme="whiteAlpha">
-            <Thead>
-              <Tr>
-                {/* small and medium received a padding o 4 */}
-                <Th px={["4", "4", "6"]} color="gray.300" width="8">
-                  {/* when the checkbox is checked the color will be pink */}
-                  <Checkbox colorScheme="pink" />
-                </Th>
+          {/* If it is loading, then display the loading on the page, else if it is a error, show the error, else , display the users */}
+          {isLoading ? (
+            <Flex justify="center">
+              <Spinner />
+            </Flex>
+          ) : error ? (
+            <Flex justify="center">
+              <Text>We could not get the user data, try againa</Text>
+            </Flex>
+          ) : (
+            <>
+              <Table colorScheme="whiteAlpha">
+                <Thead>
+                  <Tr>
+                    {/* small and medium received a padding o 4 */}
+                    <Th px={["4", "4", "6"]} color="gray.300" width="8">
+                      {/* when the checkbox is checked the color will be pink */}
+                      <Checkbox colorScheme="pink" />
+                    </Th>
 
-                <Th>User</Th>
+                    <Th>User</Th>
 
-                {isWideVersion && <Th>Register Date</Th>}
-                <Th w="8"></Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {/* row 1 */}
-              <Tr>
-                <Td px={["4", "4", "6"]}>
-                  <Checkbox colorScheme="pink" />
-                </Td>
-                <Td px={["4", "4", "6"]}>
-                  <Box>
-                    <Text fontWeight="bold">Gabriel Cavalcante</Text>
-                    <Text fontSize="sm" color="gray.300">
-                      gabrielcalk@outlook.com
-                    </Text>
-                  </Box>
-                </Td>
+                    {isWideVersion && <Th>Register Date</Th>}
+                    <Th w="8"></Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {/* row 1 */}
+                  <Tr>
+                    <Td px={["4", "4", "6"]}>
+                      <Checkbox colorScheme="pink" />
+                    </Td>
+                    <Td px={["4", "4", "6"]}>
+                      <Box>
+                        <Text fontWeight="bold">Gabriel Cavalcante</Text>
+                        <Text fontSize="sm" color="gray.300">
+                          gabrielcalk@outlook.com
+                        </Text>
+                      </Box>
+                    </Td>
 
-                {isWideVersion && (
-                  <Td px={["4", "4", "6"]}>04 de Abril, 2021</Td>
-                )}
-                <Td>
-                  <Button
-                    as="a"
-                    size="sm"
-                    fontSize="sm"
-                    pr={["-1", "-1", "-1", "3"]}
-                    colorScheme="whiteAlpha"
-                    leftIcon={<Icon as={RiPencilLine} fontSize="16" />}
-                  >
-                    {isWideVersion && "Edit"}
-                  </Button>
-                </Td>
-              </Tr>
+                    {isWideVersion && (
+                      <Td px={["4", "4", "6"]}>04 de Abril, 2021</Td>
+                    )}
+                    <Td>
+                      <Button
+                        as="a"
+                        size="sm"
+                        fontSize="sm"
+                        pr={["-1", "-1", "-1", "3"]}
+                        colorScheme="whiteAlpha"
+                        leftIcon={<Icon as={RiPencilLine} fontSize="16" />}
+                      >
+                        {isWideVersion && "Edit"}
+                      </Button>
+                    </Td>
+                  </Tr>
 
-              {/* row 2 */}
-              <Tr>
-                <Td px={["4", "4", "6"]}>
-                  <Checkbox colorScheme="pink" />
-                </Td>
-                <Td px={["4", "4", "6"]}>
-                  <Box>
-                    <Text fontWeight="bold">Gabriel Cavalcante</Text>
-                    <Text fontSize="sm" color="gray.300">
-                      gabrielcalk@outlook.com
-                    </Text>
-                  </Box>
-                </Td>
+                  {/* row 2 */}
+                  <Tr>
+                    <Td px={["4", "4", "6"]}>
+                      <Checkbox colorScheme="pink" />
+                    </Td>
+                    <Td px={["4", "4", "6"]}>
+                      <Box>
+                        <Text fontWeight="bold">Gabriel Cavalcante</Text>
+                        <Text fontSize="sm" color="gray.300">
+                          gabrielcalk@outlook.com
+                        </Text>
+                      </Box>
+                    </Td>
 
-                {isWideVersion && (
-                  <Td px={["4", "4", "6"]}>04 de Abril, 2021</Td>
-                )}
-                <Td>
-                  <Button
-                    as="a"
-                    size="sm"
-                    fontSize="sm"
-                    pr={["-1", "-1", "-1", "3"]}
-                    colorScheme="whiteAlpha"
-                    leftIcon={<Icon as={RiPencilLine} fontSize="16" />}
-                  >
-                    {isWideVersion && "Edit"}
-                  </Button>
-                </Td>
-              </Tr>
-            </Tbody>
-          </Table>
-
-          <Pagination />
+                    {isWideVersion && (
+                      <Td px={["4", "4", "6"]}>04 de Abril, 2021</Td>
+                    )}
+                    <Td>
+                      <Button
+                        as="a"
+                        size="sm"
+                        fontSize="sm"
+                        pr={["-1", "-1", "-1", "3"]}
+                        colorScheme="whiteAlpha"
+                        leftIcon={<Icon as={RiPencilLine} fontSize="16" />}
+                      >
+                        {isWideVersion && "Edit"}
+                      </Button>
+                    </Td>
+                  </Tr>
+                </Tbody>
+              </Table>
+              <Pagination />
+            </>
+          )}
         </Box>
       </Flex>
     </Box>
