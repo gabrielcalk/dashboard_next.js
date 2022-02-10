@@ -3,6 +3,12 @@ import { AppProps } from "next/app";
 import { ChakraProvider } from "@chakra-ui/react";
 import { theme } from "../styles/theme";
 import { SideBarDrawerProvider } from "../contexts/SideBarDrawerContext";
+import { makeServer } from "../services/mirage";
+
+if(process.env.NODE_ENV === 'development'){
+  // if we are on development environment, then create the mirage server
+  makeServer()
+}
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
