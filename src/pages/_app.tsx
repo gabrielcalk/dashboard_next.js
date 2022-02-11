@@ -1,6 +1,7 @@
 import { AppProps } from "next/app";
 // context that give to our application the chakra informations (theme)
 import { ChakraProvider } from "@chakra-ui/react";
+import { ReactQueryDevtools } from "react-query/devtools";
 import { theme } from "../styles/theme";
 
 import { QueryClient, QueryClientProvider } from "react-query"; //let me use react query
@@ -12,7 +13,7 @@ if (process.env.NODE_ENV === "development") {
   makeServer();
 }
 
-const queryClient = new QueryClient() //The QueryClient can be used to interact with a cache:
+const queryClient = new QueryClient(); //The QueryClient can be used to interact with a cache:
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -24,6 +25,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           <Component {...pageProps} />
         </SideBarDrawerProvider>
       </ChakraProvider>
+      <ReactQueryDevtools />
     </QueryClientProvider>
   );
 }
