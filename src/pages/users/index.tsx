@@ -17,6 +17,7 @@ import {
   Link,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
+import { GetServerSideProps } from "next/types";
 import { useState } from "react";
 import { RiAddLine, RiPencilLine } from "react-icons/ri";
 
@@ -24,7 +25,7 @@ import { Header } from "../../components/Header";
 import { Pagination } from "../../components/Paginations";
 import { SideBard } from "../../components/Sidebar";
 import { api } from "../../services/api";
-import { useUsers } from "../../services/hooks/useUsers";
+import { getUsers, useUsers } from "../../services/hooks/useUsers";
 import { queryClient } from "../../services/queryClient";
 
 export default function UserList() {
@@ -155,3 +156,4 @@ export default function UserList() {
     </Box>
   );
 }
+
