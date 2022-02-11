@@ -16,32 +16,15 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import Link from "next/link";
-import { useEffect } from "react";
 import { RiAddLine, RiPencilLine } from "react-icons/ri";
-import { useQuery } from "react-query"; //this useQuery will be used to make the request to the back-end/api
 
 import { Header } from "../../components/Header";
 import { Pagination } from "../../components/Paginations";
 import { SideBard } from "../../components/Sidebar";
-import { api } from "../../services/api";
+import { useUsers } from "../../services/hooks/useUsers";
 
 export default function UserList() {
-  const { data, isLoading, isFetching, error } = useQuery("users", async () => {
-    //key utilized to cache the data
-    const {data} = await api.get("users");
- 
-    const users = data.users.map(user => {
-      return {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        createdAt: new Date(user.createdAt).toLocaleDateString()
-      }
-    });
-    return users;
-  }, {
-    staleTime: 1000 * 5 //this query during 5 seconds will be fresh
-  });
+  const { data, isLoading, isFetching, error } = useUsers();
 
   const isWideVersion = useBreakpointValue({
     // by default we are not on the wide version, but if the screen width is large, then the wide version is true
@@ -60,7 +43,9 @@ export default function UserList() {
           <Flex mb="8" justify="space-between" align="center">
             <Heading size="lg" fontWeight="normal">
               Users
-              {!isLoading && isFetching && <Spinner size="sm" color="gray.500" ml="4"/>}
+              {!isLoading && isFetching && (
+                <Spinner size="sm" color="gray.500" ml="4" />
+              )}
             </Heading>
 
             <Link href="/users/create" passHref>
@@ -83,7 +68,7 @@ export default function UserList() {
             </Flex>
           ) : error ? (
             <Flex justify="center">
-              <Text>We could not get the user data, try againa</Text>
+              <Text>We could not get the user data, try again</Text>
             </Flex>
           ) : (
             <>
@@ -140,7 +125,11 @@ export default function UserList() {
                   })}
                 </Tbody>
               </Table>
-              <Pagination />
+              <Pagination
+                totalCountOfRegisters={200}
+                currentPage={6}
+                onPageChange={() => {}}
+              />
             </>
           )}
         </Box>

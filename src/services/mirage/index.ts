@@ -1,5 +1,5 @@
 // mirage configuration
-import { createServer, Factory, Model } from "miragejs";
+import { createServer, Factory, Model, Response } from "miragejs";
 // lib that create fake data
 import faker from "faker";
 
@@ -38,7 +38,7 @@ export function makeServer() {
     // creating data when the mirage server is initialized
     seeds(server) {
       // create a list of 200 user using factories
-      server.createList("user", 10);
+      server.createList("user", 100);
     },
 
     routes() {
@@ -47,7 +47,26 @@ export function makeServer() {
 
       //every request will have a delay of 750 milliseconds
       this.timing = 750; //this is important to test the loades on the user experience
-      this.get("/users");
+
+      // mirage don't have pagination, so we are creating the function to do that
+      this.get("/users", function (schema, request) {
+        // query params came in a string
+        const { page = 1, per_page = 10 } = request.queryParams;
+        const total = schema.all("user").length; //getting all the register users
+        const pageStart = (Number(page) - 1) * Number(per_page);
+        const pageEnd = pageStart + Number(per_page);
+        const users = this.serialize(schema.all("user")).users.slice(
+          pageStart,
+          pageEnd
+        );
+        // because I am sending metadate I will use the response function from mirage
+        return new Response(
+          200,
+          {'x-total-count': String(total)},
+          {users}
+        )
+      });
+
       this.post("/users");
 
       // changed the namespace to a empty string to not conflit the api router existing on next.js pages
