@@ -1,5 +1,5 @@
 // mirage configuration
-import { createServer, Factory, Model, Response } from "miragejs";
+import { ActiveModelSerializer, createServer, Factory, Model, Response } from "miragejs";
 // lib that create fake data
 import faker from "faker";
 
@@ -11,6 +11,9 @@ type User = {
 
 export function makeServer() {
   const server = createServer({
+    serializers: {
+      application: ActiveModelSerializer
+    },
     // setting up server
     // what data I will storage
     models: {
@@ -67,6 +70,7 @@ export function makeServer() {
         )
       });
 
+      this.get('/users/:id')
       this.post("/users");
 
       // changed the namespace to a empty string to not conflit the api router existing on next.js pages

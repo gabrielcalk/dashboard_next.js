@@ -12,10 +12,14 @@ import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useMutation } from "react-query";
 
 import { Input } from "../../components/Form/Input";
 import { Header } from "../../components/Header";
 import { SideBard } from "../../components/Sidebar";
+import { api } from "../../services/api";
+import { queryClient } from "../../services/queryClient";
+import { useRouter } from "next/router";
 
 // type of data that I will have on the form signIn
 type CreateUserFormData = {
@@ -26,6 +30,23 @@ type CreateUserFormData = {
 };
 
 export default function CreateUser() {
+  const router = useRouter()
+
+  const createUser = useMutation(async (user: CreateUserFormData) => {
+    const response = await api.post("users", {
+      user: {
+        ...user,
+        createdAt: new Date(),
+      },
+    });
+    return response.data.user;
+  }, {
+    // if the create mutation is successful, then block the cache for the users query (we are doing that to update the info)
+    onSuccess: () => {
+      queryClient.invalidateQueries('users')
+    }
+  });
+
   // validating the data from the form
   const CreateUserFormSchema = yup.object().shape({
     name: yup.string().required(),
@@ -49,8 +70,8 @@ export default function CreateUser() {
   const { errors } = formState;
 
   const onSubmit: SubmitHandler<CreateUserFormData> = async (values) => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    console.log(values);
+    await createUser.mutateAsync(values)
+    router.push('/users')
   };
 
   return (
@@ -121,7 +142,11 @@ export default function CreateUser() {
                   Cancel
                 </Button>
               </Link>
-              <Button type="submit" colorScheme="pink" isLoading={formState.isSubmitting}>
+              <Button
+                type="submit"
+                colorScheme="pink"
+                isLoading={formState.isSubmitting}
+              >
                 Save
               </Button>
             </HStack>

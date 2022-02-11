@@ -41,6 +41,6 @@ export async function getUsers(page: number): Promise<GetUserResponse> {
 export function useUsers(page: number) {
   // passing the page as parametor to automatticaly update the content on the page and not used the cache
   return useQuery(["users", page], () => getUsers(page), {
-    staleTime: 1000 * 5, //this query during 5 seconds will be fresh
+    staleTime: 1000 * 60 * 10, //this query during 10 minutes will be fresh
   });
 }

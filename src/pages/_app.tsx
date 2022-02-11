@@ -7,13 +7,12 @@ import { theme } from "../styles/theme";
 import { QueryClient, QueryClientProvider } from "react-query"; //let me use react query
 import { SideBarDrawerProvider } from "../contexts/SideBarDrawerContext";
 import { makeServer } from "../services/mirage";
+import { queryClient } from "../services/queryClient";
 
 if (process.env.NODE_ENV === "development") {
   // if we are on development environment, then create the mirage server
   makeServer();
 }
-
-const queryClient = new QueryClient(); //The QueryClient can be used to interact with a cache:
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
